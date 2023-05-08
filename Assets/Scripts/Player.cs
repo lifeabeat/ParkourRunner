@@ -37,6 +37,19 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector2 wallCheckSize;
     private bool wallDeteced;
 
+    [HideInInspector] public bool ledgeDetected;
+
+    [Header("Ledge Info")]
+
+    [SerializeField] private Vector2 offset1;
+    [SerializeField] private Vector2 offset2;
+
+    private Vector2 climbPosBegin;
+    private Vector2 climbPosOver;
+
+    private bool canClimb;
+    private bool canGrabLedge = true ; // True so player can grab
+
 
 
     private bool isGrounded;
@@ -48,7 +61,7 @@ public class Player : MonoBehaviour
     {
         theRb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        Debug.Log(wallDeteced);
+        
     }
 
     // Update is called once per frame
@@ -69,12 +82,48 @@ public class Player : MonoBehaviour
         CheckGrounded();
         CheckWallAhead();
         CheckCeilling();
+        CheckForLedge();
 
         if (isGrounded)
         {
             canDoubleJump = true;
         }
     }
+
+    private void CheckForLedge()
+    {
+        if (ledgeDetected && canGrabLedge)
+        {
+            canGrabLedge = false;
+
+            // Get pos of the ledge 
+            Vector2 ledgePosition = GetComponentInChildren<LedgeDetection>().transform.position;
+
+            // Set Pos before climb and after climb using ledgePos and offset 
+            climbPosBegin = ledgePosition + offset1;
+            climbPosOver = ledgePosition + offset2;
+
+
+            canClimb = true;
+        }
+
+        if (canClimb)
+        {
+            transform.position = climbPosBegin;
+        }    
+    }    
+
+    // Using add event in Animation
+    private void LedgeClimbOver()
+    {
+        canClimb = false;
+        transform.position = climbPosOver;
+        isGrounded = true;
+        Invoke("AllowLedgeGrab", 1f);
+        
+    }
+
+    private void AllowLedgeGrab() => canGrabLedge = true;
 
     private void CheckForSlide()
     {
@@ -85,7 +134,7 @@ public class Player : MonoBehaviour
     }
     private void Movement()
     {
-        if(!wallDeteced)
+        if(wallDeteced)
         {
             return;
         }    
@@ -152,6 +201,7 @@ public class Player : MonoBehaviour
         anim.SetBool("IsSliding", isSliding);
         anim.SetFloat("xVelocity", theRb.velocity.x);
         anim.SetFloat("yVelocity", theRb.velocity.y);
+        anim.SetBool("canClimb", canClimb);
     }    
     private void CheckGrounded()
     {
