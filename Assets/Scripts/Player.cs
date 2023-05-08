@@ -11,6 +11,13 @@ public class Player : MonoBehaviour
     /*[SerializeField]
     private float timer;*/
 
+    [Header("Speed Info")]
+    [SerializeField] private float maxSpeed;
+    [SerializeField] private float speedMultiplier;
+    [Space]
+    [SerializeField] private float milestoneIncreaser;
+    private float speedMilestones;
+
     [Header("Move Info")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
@@ -20,7 +27,7 @@ public class Player : MonoBehaviour
     private bool canDoubleJump;
     private bool PlayerUnlocked;
 
-    [Header("Move Info")]
+    [Header("Slide Info")]
     [SerializeField] private float slideSpeed;
     [SerializeField] private float slideTime;
     [SerializeField] private float slideCoolDownTime;
@@ -41,8 +48,8 @@ public class Player : MonoBehaviour
 
     [Header("Ledge Info")]
 
-    [SerializeField] private Vector2 offset1;
-    [SerializeField] private Vector2 offset2;
+    [SerializeField] private Vector2 offset1; // Pos Start climbing
+    [SerializeField] private Vector2 offset2; // Pos After climbing
 
     private Vector2 climbPosBegin;
     private Vector2 climbPosOver;
@@ -61,7 +68,7 @@ public class Player : MonoBehaviour
     {
         theRb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        
+        speedMilestones = milestoneIncreaser;
     }
 
     // Update is called once per frame
@@ -71,6 +78,7 @@ public class Player : MonoBehaviour
         slideCoolDownCounter -= Time.deltaTime;
 
         AnimatorController();
+        SpeedController();
 
         if (PlayerUnlocked)
         {
@@ -132,6 +140,28 @@ public class Player : MonoBehaviour
             isSliding = false;
         }
     }
+
+    private void SpeedController()
+    {
+        if (moveSpeed == maxSpeed)
+        {
+            return;
+        }    
+
+        if(transform.position.x > speedMilestones)
+        {
+            speedMilestones = speedMilestones + milestoneIncreaser;
+
+            moveSpeed *= speedMultiplier;
+
+            milestoneIncreaser = milestoneIncreaser * speedMultiplier;
+
+            if (moveSpeed > maxSpeed )
+            {
+                moveSpeed = maxSpeed;
+            }    
+        }    
+    }    
     private void Movement()
     {
         if(wallDeteced)
