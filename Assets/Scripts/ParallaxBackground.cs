@@ -30,7 +30,7 @@ public class ParallaxBackground : MonoBehaviour
 
         if (distanceToMoved > xPostion + length)
         {
-            xPostion = xPostion + length;
+            xPostion += length;
         }    
     }
 }

@@ -8,14 +8,25 @@ public class Player : MonoBehaviour
     private Animator anim;
     [SerializeField]
     private Rigidbody2D theRb;
+    [SerializeField]
+    private SpriteRenderer theSR;
     /*[SerializeField]
     private float timer;*/
+
+    private bool isDead;
+
+    [Header("KnockBack Info")]
+    [SerializeField] private Vector2 knockbackDir;
+    private bool isKnocked;
+    private bool canBeKnocked = true;
 
     [Header("Speed Info")]
     [SerializeField] private float maxSpeed;
     [SerializeField] private float speedMultiplier;
+    private float defaultSpeed;
     [Space]
     [SerializeField] private float milestoneIncreaser;
+    private float defaultMilestoneIncrease;
     private float speedMilestones;
 
     [Header("Move Info")]
@@ -66,19 +77,51 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        theSR = GetComponent<SpriteRenderer>();
         theRb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         speedMilestones = milestoneIncreaser;
+        defaultSpeed = moveSpeed;
+        defaultMilestoneIncrease = milestoneIncreaser;
     }
 
     // Update is called once per frame
     void Update()
     {
-        slideTimerCounter -= Time.deltaTime;
-        slideCoolDownCounter -= Time.deltaTime;
+        //Check Collision
+        CheckGrounded();
+        CheckWallAhead();
+        CheckCelling();
+        
 
         AnimatorController();
         SpeedController();
+
+        slideTimerCounter -= Time.deltaTime;
+        slideCoolDownCounter -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Knockback();
+        }
+
+        if (Input.GetKeyDown(KeyCode.J) && !isDead)
+        {
+            StartCoroutine(Die());
+            
+        }
+
+        if (isDead)
+        {
+            return;
+        }    
+        
+
+        if(isKnocked)
+        {
+            return;
+        }    
+
 
         if (PlayerUnlocked)
         {
@@ -87,9 +130,6 @@ public class Player : MonoBehaviour
 
         CheckInput();
         CheckForSlide();
-        CheckGrounded();
-        CheckWallAhead();
-        CheckCeilling();
         CheckForLedge();
 
         if (isGrounded)
@@ -98,11 +138,69 @@ public class Player : MonoBehaviour
         }
     }
 
+    private IEnumerator Die()
+    {
+        canBeKnocked = false;
+        isDead = true;
+        theRb.velocity = knockbackDir;
+        anim.SetBool("IsDead", true);
+        yield return new WaitForSeconds(.5f);
+        theRb.velocity = new Vector2(0, 0);
+    }
+
+    private IEnumerator Invincibility()
+    {
+        Color originalColor = theSR.color;
+        Color darkenColor = new Color(theSR.color.r, theSR.color.g, theSR.color.b, .5f);
+
+        canBeKnocked = false;
+        theSR.color = darkenColor;
+        yield return new WaitForSeconds(.1f);
+        theSR.color = originalColor;
+        yield return new WaitForSeconds(.12f);
+        theSR.color = darkenColor;
+        yield return new WaitForSeconds(.13f);
+        theSR.color = originalColor;
+        yield return new WaitForSeconds(.15f);
+        theSR.color = darkenColor;
+        yield return new WaitForSeconds(.15f);
+        theSR.color = originalColor;
+        yield return new WaitForSeconds(.2f);
+        theSR.color = darkenColor;
+        yield return new WaitForSeconds(.2f);
+        theSR.color = originalColor;
+        yield return new WaitForSeconds(.25f);
+        theSR.color = darkenColor;
+        yield return new WaitForSeconds(.25f);
+        theSR.color = originalColor;
+
+
+        canBeKnocked = true;
+    }    
+
+    private void Knockback()
+    {
+        if(!canBeKnocked)
+        {
+            return;
+        }
+        StartCoroutine(Invincibility());
+        isKnocked = true;
+        theRb.velocity = knockbackDir;
+
+    }
+
+    // Using add event in Animation
+    private void CancelKnockbacck() => isKnocked = false;   
     private void CheckForLedge()
     {
         if (ledgeDetected && canGrabLedge)
         {
             canGrabLedge = false;
+
+            /*//Fix animation roll while climbing
+            theRb.gravityScale = 0;*/
+
 
             // Get pos of the ledge 
             Vector2 ledgePosition = GetComponentInChildren<LedgeDetection>().transform.position;
@@ -125,6 +223,10 @@ public class Player : MonoBehaviour
     private void LedgeClimbOver()
     {
         canClimb = false;
+
+        /*//Change Gravity back to normal after climbing
+        theRb.gravityScale = 3;*/
+
         transform.position = climbPosOver;
         isGrounded = true;
         Invoke("AllowLedgeGrab", 1f);
@@ -162,10 +264,18 @@ public class Player : MonoBehaviour
             }    
         }    
     }    
+
+    private void SpeedReset()
+    {
+        moveSpeed = defaultSpeed;
+        milestoneIncreaser = defaultMilestoneIncrease;
+
+    }
     private void Movement()
     {
         if(wallDeteced)
         {
+            SpeedReset();
             return;
         }    
 
@@ -232,7 +342,16 @@ public class Player : MonoBehaviour
         anim.SetFloat("xVelocity", theRb.velocity.x);
         anim.SetFloat("yVelocity", theRb.velocity.y);
         anim.SetBool("canClimb", canClimb);
-    }    
+        anim.SetBool("IsKnocked", isKnocked);
+
+        if (theRb.velocity.y < 20)
+        {
+            anim.SetBool("canRoll", true);
+        }
+    }
+
+    // Using add event in Animation
+    private void RollFinished() => anim.SetBool("canRoll", false);
     private void CheckGrounded()
     {
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatisGround);
@@ -241,7 +360,7 @@ public class Player : MonoBehaviour
     {
         wallDeteced = Physics2D.BoxCast(wallCheck.position, wallCheckSize, 0, Vector2.zero, 0, whatisGround);
     }    
-    private void CheckCeilling()
+    private void CheckCelling()
     {
         isCelling = Physics2D.Raycast(transform.position, Vector2.up, cellingCheckDistance, whatisGround);
     }    
