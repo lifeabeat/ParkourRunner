@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
     private float slideCoolDownCounter;
 
     [Header("Collision Info")]
-    
+
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private float cellingCheckDistance;
     [SerializeField] private LayerMask whatisGround;
@@ -63,17 +63,17 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector2 offset1; // Pos Start climbing
     [SerializeField] private Vector2 offset2; // Pos After climbing
 
-    
+
     private Vector2 climbPosBegin;
     private Vector2 climbPosOver;
 
     private bool canClimb;
-    private bool canGrabLedge = true ; // True so player can grab
+    private bool canGrabLedge = true; // True so player can grab
 
     private bool isGrounded;
     private bool isCelling;
 
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         CheckGrounded();
         CheckWallAhead();
         CheckCelling();
-        
+
 
         AnimatorController();
         SpeedController();
@@ -109,19 +109,19 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J) && !isDead)
         {
             StartCoroutine(Die());
-            
+
         }
 
         if (isDead)
         {
             return;
-        }    
-        
+        }
 
-        if(isKnocked)
+
+        if (isKnocked)
         {
             return;
-        }    
+        }
 
 
         if (PlayerUnlocked)
@@ -139,6 +139,20 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Damage()
+    {
+        if (moveSpeed >= maxSpeed)
+        {
+            Knockback();
+        }
+        else
+        {
+            // Remember to Start Coroutine <= Player cant die by Trap
+            StartCoroutine(Die());
+        }
+
+    }
+
     private IEnumerator Die()
     {
         canBeKnocked = false;
@@ -147,6 +161,8 @@ public class Player : MonoBehaviour
         anim.SetBool("IsDead", true);
         yield return new WaitForSeconds(.5f);
         theRb.velocity = new Vector2(0, 0);
+        yield return new WaitForSeconds(1f);
+        GameManager.Instance.RestartLevel();
     }
 
     private IEnumerator Invincibility()
@@ -177,11 +193,11 @@ public class Player : MonoBehaviour
 
 
         canBeKnocked = true;
-    }    
+    }
 
     private void Knockback()
     {
-        if(!canBeKnocked)
+        if (!canBeKnocked)
         {
             return;
         }
@@ -192,7 +208,7 @@ public class Player : MonoBehaviour
     }
 
     // Using add event in Animation
-    private void CancelKnockbacck() => isKnocked = false;   
+    private void CancelKnockbacck() => isKnocked = false;
     private void CheckForLedge()
     {
         if (ledgeDetected && canGrabLedge)
@@ -217,8 +233,8 @@ public class Player : MonoBehaviour
         if (canClimb)
         {
             transform.position = climbPosBegin;
-        }    
-    }    
+        }
+    }
 
     // Using add event in Animation
     private void LedgeClimbOver()
@@ -231,14 +247,14 @@ public class Player : MonoBehaviour
         transform.position = climbPosOver;
         isGrounded = true;
         Invoke("AllowLedgeGrab", 1f);
-        
+
     }
 
     private void AllowLedgeGrab() => canGrabLedge = true;
 
     private void CheckForSlide()
     {
-        if (slideTimerCounter <0 && !isCelling)
+        if (slideTimerCounter < 0 && !isCelling)
         {
             isSliding = false;
         }
@@ -249,9 +265,9 @@ public class Player : MonoBehaviour
         if (moveSpeed == maxSpeed)
         {
             return;
-        }    
+        }
 
-        if(transform.position.x > speedMilestones)
+        if (transform.position.x > speedMilestones)
         {
             speedMilestones = speedMilestones + milestoneIncreaser;
 
@@ -259,12 +275,12 @@ public class Player : MonoBehaviour
 
             milestoneIncreaser = milestoneIncreaser * speedMultiplier;
 
-            if (moveSpeed > maxSpeed )
+            if (moveSpeed > maxSpeed)
             {
                 moveSpeed = maxSpeed;
-            }    
-        }    
-    }    
+            }
+        }
+    }
 
     private void SpeedReset()
     {
@@ -274,16 +290,17 @@ public class Player : MonoBehaviour
     }
     private void Movement()
     {
-        if(wallDeteced)
+        if (wallDeteced)
         {
             SpeedReset();
             return;
-        }    
+        }
 
         if (isSliding)
         {
             theRb.velocity = new Vector2(slideSpeed, theRb.velocity.y);
-        } else
+        }
+        else
         {
             theRb.velocity = new Vector2(moveSpeed, theRb.velocity.y);
         }
@@ -292,25 +309,25 @@ public class Player : MonoBehaviour
 
     private void SlideButton()
     {
-        if ( theRb.velocity.x != 0 && slideCoolDownCounter < 0)
+        if (theRb.velocity.x != 0 && slideCoolDownCounter < 0)
         {
             isSliding = true;
             slideTimerCounter = slideTime;
             slideCoolDownCounter = slideCoolDownTime;
         }
-        
+
 
     }
     private void JumpButton()
     {
-        if(isSliding)
+        if (isSliding)
         {
             return;
         }
         if (isGrounded)
         {
             theRb.velocity = new Vector2(theRb.velocity.x, jumpForce);
-        }    
+        }
         else if (canDoubleJump)
         {
             canDoubleJump = false;
@@ -318,7 +335,7 @@ public class Player : MonoBehaviour
         }
     }
     private void CheckInput()
-    {   
+    {
         if (Input.GetButtonDown("Fire2"))
         {
             PlayerUnlocked = true;
@@ -360,11 +377,11 @@ public class Player : MonoBehaviour
     private void CheckWallAhead()
     {
         wallDeteced = Physics2D.BoxCast(wallCheck.position, wallCheckSize, 0, Vector2.zero, 0, whatisGround);
-    }    
+    }
     private void CheckCelling()
     {
         isCelling = Physics2D.Raycast(transform.position, Vector2.up, cellingCheckDistance, whatisGround);
-    }    
+    }
 
 
     private void OnDrawGizmos()
@@ -372,5 +389,5 @@ public class Player : MonoBehaviour
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y - groundCheckDistance));
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y + cellingCheckDistance));
         Gizmos.DrawWireCube(wallCheck.position, wallCheckSize);
-    }    
+    }
 }

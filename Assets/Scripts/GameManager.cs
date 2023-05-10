@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class GameManager : BaseManager<GameManager>
 {
     // Using Delegate
@@ -12,4 +12,9 @@ public class GameManager : BaseManager<GameManager>
     {
         coins = v;
     }
+
+    public Color platformColor;
+
+    public void RestartLevel() => SceneManager.LoadScene(0);
+    
 }

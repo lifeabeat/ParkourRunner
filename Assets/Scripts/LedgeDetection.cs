@@ -7,7 +7,7 @@ public class LedgeDetection : MonoBehaviour
     [SerializeField] private float radius;
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private Player player;
-    
+
 
     private bool canDetected;
 
@@ -16,14 +16,14 @@ public class LedgeDetection : MonoBehaviour
         if (canDetected)
         {
             player.ledgeDetected = Physics2D.OverlapCircle(transform.position, radius, whatIsGround);
-        }    
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            canDetected = false;    
+            canDetected = false;
         }
     }
 
@@ -32,7 +32,7 @@ public class LedgeDetection : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             canDetected = true;
-        }    
+        }
     }
 
     private void OnDrawGizmos()

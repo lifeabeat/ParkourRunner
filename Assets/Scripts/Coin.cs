@@ -21,14 +21,14 @@ public class Coin : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Coin"))
+        if (collision.gameObject.CompareTag("Coin"))
         {
             Destroy(collision.gameObject);
             coins++;
             GameManager.Instance.UpdateCoins(coins);
             collectCoinDelegate(coins); //Broadcast event
-            
-        }    
+
+        }
     }
 
     // Using Delegate to listen number coin PlayerCollect

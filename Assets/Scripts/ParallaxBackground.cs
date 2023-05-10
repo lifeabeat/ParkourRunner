@@ -17,10 +17,9 @@ public class ParallaxBackground : MonoBehaviour
         length = GetComponent<SpriteRenderer>().bounds.size.x;
         xPostion = transform.position.x;
 
-        
+
     }
 
-    // Update is called once per frame
     void Update()
     {
         float distanceToMoved = cam.transform.position.x * (1 - parallaxEffect);
@@ -31,6 +30,6 @@ public class ParallaxBackground : MonoBehaviour
         if (distanceToMoved > xPostion + length)
         {
             xPostion += length;
-        }    
+        }
     }
 }
