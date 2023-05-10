@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
     [SerializeField]
@@ -62,17 +63,17 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector2 offset1; // Pos Start climbing
     [SerializeField] private Vector2 offset2; // Pos After climbing
 
+    
     private Vector2 climbPosBegin;
     private Vector2 climbPosOver;
 
     private bool canClimb;
     private bool canGrabLedge = true ; // True so player can grab
 
-
-
     private bool isGrounded;
     private bool isCelling;
 
+    
 
     // Start is called before the first frame update
     void Start()
