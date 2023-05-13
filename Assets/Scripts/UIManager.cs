@@ -53,14 +53,14 @@ public class UIManager : BaseManager<UIManager>
     }
     private void Update()
     {
-        /*if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (GameManager.HasInstance && GameManager.Instance.IsPlaying == true)
             {
                 GameManager.Instance.PauseGame();
                 ActivePausePanel(true);
             }
-        }*/
+        }
     }
 
 }

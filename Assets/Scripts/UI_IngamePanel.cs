@@ -23,4 +23,18 @@ public class UI_IngamePanel : MonoBehaviour
     {
         numberOfCoins.SetText(value.ToString());
     }
+
+    public void OnPauseButtonClick()
+    {
+        if(GameManager.HasInstance && UIManager.HasInstance)
+        {
+            GameManager.Instance.PauseGame();
+            UIManager.Instance.ActivePausePanel(true);
+        }    
+    }    
+
+    public void OnMusicButtonClick()
+    {
+
+    }    
 }

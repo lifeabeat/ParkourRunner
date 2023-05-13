@@ -14,6 +14,7 @@ public class MenuPanel : MonoBehaviour
             UIManager.Instance.ActiveShopPanel(false);
             UIManager.Instance.ActiveSettingPanel(false);
             UIManager.Instance.ActiveEndGamePanel(false);
+            GameManager.Instance.StartGame();
 
         }
     }

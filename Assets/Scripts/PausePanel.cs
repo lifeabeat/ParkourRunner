@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class PausePanel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void OnResumeButtonClick()
     {
-        
+        if (GameManager.HasInstance && UIManager.HasInstance)
+        {
+            GameManager.Instance.ResumeGame();
+            UIManager.Instance.ActivePausePanel(false);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnMenuButtonClick()
     {
-        
+        if (UIManager.HasInstance && GameManager.HasInstance)
+        {
+            UIManager.Instance.ActiveMenuPanel(true);
+            UIManager.Instance.ActiveUIIngamePanel(false);
+            UIManager.Instance.ActivePausePanel(false);
+            GameManager.Instance.ResumeGame();
+            GameManager.Instance.RestartGame();
+        }
+    }
+    public void OnMusiceButtonClick()
+    {
+        if (UIManager.HasInstance)
+        {
+        }
     }
 }
