@@ -16,5 +16,8 @@ public class GameManager : BaseManager<GameManager>
     public Color platformColor;
 
     public void RestartLevel() => SceneManager.LoadScene(0);
-    
+
+    private bool isPlaying = false;
+    public bool IsPlaying => isPlaying;
+
 }
