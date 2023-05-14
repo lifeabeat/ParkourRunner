@@ -1,9 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class MenuPanel : MonoBehaviour
+public class MenuPanel : BaseManager<MenuPanel>
 {
+    [SerializeField] private TextMeshProUGUI lastscoreText;
+    [SerializeField] private TextMeshProUGUI highscoreText;
+    [SerializeField] private TextMeshProUGUI coinText;
+
+    public void UpdateInfo()
+    {
+        lastscoreText.text = "Lastest Score: " + PlayerPrefs.GetFloat("LastScore").ToString();
+        highscoreText.text = "Highest Score: " + PlayerPrefs.GetFloat("HighScore").ToString();
+        coinText.text = PlayerPrefs.GetInt("Coins").ToString();  
+    }
+
     public void OnStartButtonClick()
     {
         if (UIManager.HasInstance)
@@ -15,7 +27,6 @@ public class MenuPanel : MonoBehaviour
             UIManager.Instance.ActiveSettingPanel(false);
             UIManager.Instance.ActiveEndGamePanel(false);
             GameManager.Instance.StartGame();
-
         }
     }
     public void OnSettingButtonClick()

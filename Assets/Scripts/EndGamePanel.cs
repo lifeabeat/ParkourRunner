@@ -1,18 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EndGamePanel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private TextMeshProUGUI coinText;
+    [SerializeField] private TextMeshProUGUI distance;
+    [SerializeField] private TextMeshProUGUI score;
+    private void Start()
     {
+        if (GameManager.Instance.distance < 0)
+        {
+            return;
+        }
+        if (GameManager.Instance.Coins < 0)
+        {
+            return;
+        }
+        distance.text = "Distance: " +GameManager.Instance.distance.ToString("#,#") +" m";
+        score.text = "Score: " +GameManager.Instance.score.ToString("#,#");
+        coinText.text = "Coins: " +GameManager.Instance.Coins.ToString("#,#");
         
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    public void OnMenuButtonClick()
     {
-        
-    }
+        GameManager.Instance.RestartGame();
+    }    
 }

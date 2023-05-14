@@ -25,6 +25,7 @@ public class UIManager : BaseManager<UIManager>
         shopPanel.gameObject.SetActive(false);
         settingPanel.gameObject.SetActive(false);
         endGamePanel.gameObject.SetActive(false);
+        MenuPanel.Instance.UpdateInfo();
     }
 
     public void ActiveMenuPanel(bool active)

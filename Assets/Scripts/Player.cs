@@ -13,7 +13,8 @@ public class Player : MonoBehaviour
     private SpriteRenderer theSR;
     /*[SerializeField]
     private float timer;*/
-
+    [HideInInspector] public bool PlayerUnlocked;
+    [HideInInspector] public bool extraLife;
     private bool isDead;
 
     [Header("KnockBack Info")]
@@ -37,7 +38,6 @@ public class Player : MonoBehaviour
 
 
     private bool canDoubleJump;
-    private bool PlayerUnlocked;
 
     [Header("Slide Info")]
     [SerializeField] private float slideSpeed;
@@ -81,6 +81,7 @@ public class Player : MonoBehaviour
         theSR = GetComponent<SpriteRenderer>();
         theRb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        GameManager.Instance.GetSavedColor(theSR);
         speedMilestones = milestoneIncreaser;
         defaultSpeed = moveSpeed;
         defaultMilestoneIncrease = milestoneIncreaser;
@@ -100,17 +101,20 @@ public class Player : MonoBehaviour
 
         slideTimerCounter -= Time.deltaTime;
         slideCoolDownCounter -= Time.deltaTime;
+        extraLife = moveSpeed >= maxSpeed;
 
-        if (Input.GetKeyDown(KeyCode.K))
+
+        //Test Knockback
+        /*if (Input.GetKeyDown(KeyCode.K))
         {
             Knockback();
-        }
+        }*/
 
-        if (Input.GetKeyDown(KeyCode.J) && !isDead)
+        //Test Die
+        /*if (Input.GetKeyDown(KeyCode.J) && !isDead)
         {
             StartCoroutine(Die());
-
-        }
+        }*/
 
         if (isDead)
         {
@@ -141,7 +145,7 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        if (moveSpeed >= maxSpeed)
+        if (extraLife)
         {
             Knockback();
         }
@@ -155,14 +159,18 @@ public class Player : MonoBehaviour
 
     private IEnumerator Die()
     {
+        
         canBeKnocked = false;
         isDead = true;
         theRb.velocity = knockbackDir;
         anim.SetBool("IsDead", true);
+        Time.timeScale = 0.6f;
         yield return new WaitForSeconds(.5f);
         theRb.velocity = new Vector2(0, 0);
-        yield return new WaitForSeconds(1f);
-        GameManager.Instance.RestartLevel();
+        yield return new WaitForSeconds(.5f);
+        GameManager.Instance.EndGame();
+        
+        
     }
 
     private IEnumerator Invincibility()
@@ -336,10 +344,10 @@ public class Player : MonoBehaviour
     }
     private void CheckInput()
     {
-        if (Input.GetButtonDown("Fire2"))
+        /*if (Input.GetButtonDown("Fire2"))
         {
             PlayerUnlocked = true;
-        }
+        }*/
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
