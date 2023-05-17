@@ -21,6 +21,11 @@ public class Coin : MonoBehaviour
         {
             Destroy(collision.gameObject);
             coins++;
+            if(AudioManager.HasInstance)
+            {
+                AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_COINPICKUP);
+                AudioManager.Instance.PlayRandomSEPitch();
+            }    
             GameManager.Instance.UpdateCoins(coins);
             collectCoinDelegate(coins); //Broadcast event for IngamePanel
 

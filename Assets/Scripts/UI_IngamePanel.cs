@@ -56,7 +56,11 @@ public class UI_IngamePanel : MonoBehaviour
     // Button
     public void OnPauseButtonClick()
     {
-        if(GameManager.HasInstance && UIManager.HasInstance)
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
+        if (GameManager.HasInstance && UIManager.HasInstance)
         {
             GameManager.Instance.PauseGame();
             UIManager.Instance.ActivePausePanel(true);
@@ -65,6 +69,9 @@ public class UI_IngamePanel : MonoBehaviour
 
     public void OnMusicButtonClick()
     {
-
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
     }    
 }

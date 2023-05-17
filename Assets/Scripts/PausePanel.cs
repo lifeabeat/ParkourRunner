@@ -6,6 +6,10 @@ public class PausePanel : MonoBehaviour
 {
     public void OnResumeButtonClick()
     {
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
         if (GameManager.HasInstance && UIManager.HasInstance)
         {
             GameManager.Instance.ResumeGame();
@@ -15,6 +19,10 @@ public class PausePanel : MonoBehaviour
 
     public void OnMenuButtonClick()
     {
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
         if (UIManager.HasInstance && GameManager.HasInstance)
         {
             UIManager.Instance.ActiveMenuPanel(true);
@@ -26,6 +34,10 @@ public class PausePanel : MonoBehaviour
     }
     public void OnMusiceButtonClick()
     {
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
         if (UIManager.HasInstance)
         {
         }

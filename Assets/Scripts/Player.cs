@@ -81,6 +81,7 @@ public class Player : MonoBehaviour
         theSR = GetComponent<SpriteRenderer>();
         theRb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        // Use this if not the player don't get Color from PlayerRef
         GameManager.Instance.GetSavedColor(theSR);
         speedMilestones = milestoneIncreaser;
         defaultSpeed = moveSpeed;
@@ -147,11 +148,19 @@ public class Player : MonoBehaviour
     {
         if (extraLife)
         {
+            if (AudioManager.HasInstance)
+            {
+                AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_FALLINGSPIKE_LAND);
+            }
             Knockback();
         }
         else
         {
             // Remember to Start Coroutine <= Player cant die by Trap
+            if (AudioManager.HasInstance)
+            {
+                AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_FALLINGSPIKE_LAND);
+            }
             StartCoroutine(Die());
         }
 
@@ -159,7 +168,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator Die()
     {
-        
+         
         canBeKnocked = false;
         isDead = true;
         theRb.velocity = knockbackDir;
@@ -334,11 +343,19 @@ public class Player : MonoBehaviour
         }
         if (isGrounded)
         {
+            if (AudioManager.HasInstance)
+            {
+                AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_JUMP_01);
+            }
             theRb.velocity = new Vector2(theRb.velocity.x, jumpForce);
         }
         else if (canDoubleJump)
         {
             canDoubleJump = false;
+            if (AudioManager.HasInstance)
+            {
+                AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_JUMP_02);
+            }
             theRb.velocity = new Vector2(theRb.velocity.x, doubleJumpForce);
         }
     }

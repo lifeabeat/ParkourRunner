@@ -26,6 +26,10 @@ public class EndGamePanel : MonoBehaviour
     
     public void OnMenuButtonClick()
     {
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
         GameManager.Instance.RestartGame();
     }    
 }

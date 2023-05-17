@@ -31,11 +31,10 @@ public class GameManager : BaseManager<GameManager>
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         theSR = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>();
+        //Using PlayerRef to Update Player Skin every first time to start the game
         GetSavedColor(theSR);
         GetPlatformSavedColor();
     }
-
-
 
     public void UnlockPlayer()
     {
@@ -77,9 +76,9 @@ public class GameManager : BaseManager<GameManager>
             UIManager.Instance.ActiveMenuPanel(false);
             UIManager.Instance.ActiveUIIngamePanel(false);
             UIManager.Instance.ActiveEndGamePanel(true);
-        }    
+        }
 
-    }    
+    }
     public void RestartGame()
     {
         isPlaying = true;
@@ -95,11 +94,11 @@ public class GameManager : BaseManager<GameManager>
             /*UIManager.Instance.UIIngamePanel.GetComponent<GamePanel>.NumberOfCoins.SetText("0");*/
             UIManager.Instance.UIIngamePanel.NumberOfCoins.SetText("0");
             SceneManager.LoadScene(0);
-            
+
         }
     }
 
-    
+
     public void SaveColor(float r, float g, float b)
     {
         PlayerPrefs.SetFloat("ColorR", r);
@@ -128,11 +127,11 @@ public class GameManager : BaseManager<GameManager>
         float colorB = PlayerPrefs.GetFloat("ColorB");
 
         theSR.color = new Color(colorR, colorG, colorB, 1);
-    }    
+    }
 
     private void Update()
     {
-        
+
         if (player != null)
         {
             if (player.transform.position.x >= distance)
@@ -146,7 +145,7 @@ public class GameManager : BaseManager<GameManager>
         }
         if (theSR == null)
         {
-           theSR = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>();
+            theSR = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>();
         }
     }
 
@@ -158,10 +157,10 @@ public class GameManager : BaseManager<GameManager>
         score = distance * coins;
         PlayerPrefs.SetFloat("LastScore", score);
 
-        if(PlayerPrefs.GetFloat("HighScore") <score)
+        if (PlayerPrefs.GetFloat("HighScore") < score)
         {
             PlayerPrefs.SetFloat("HighScore", score);
-        }    
-    }    
-   
+        }
+    }
+
 }

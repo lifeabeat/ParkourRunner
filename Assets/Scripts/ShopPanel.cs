@@ -36,11 +36,16 @@ public class ShopPanel : MonoBehaviour
     [SerializeField] private GameObject playerColorButton;
     [SerializeField] private Transform playerColorParent;
     [SerializeField] private Image playerDisplay;
+    [SerializeField] private SpriteRenderer playerDisplaysr;
 
 
 
     public void OnExitButtonClick()
     {
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
         UIManager.Instance.ActiveMenuPanel(true);
         UIManager.Instance.ActiveShopPanel(false);
     }
@@ -66,6 +71,8 @@ public class ShopPanel : MonoBehaviour
             newButton.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = price.ToString("#,#");
             newButton.GetComponent<Button>().onClick.AddListener(() => PurchaseColor(color, price, ColorType.playerColor));
         }
+        playerDisplay.color = new Color(PlayerPrefs.GetFloat("ColorR"), PlayerPrefs.GetFloat("ColorG"), PlayerPrefs.GetFloat("ColorB"));
+        platformDisplay.color = GameManager.Instance.platformColor;
     }
 
     public void PurchaseColor(Color Buycolor, int price, ColorType colorType)
@@ -96,8 +103,16 @@ public class ShopPanel : MonoBehaviour
             PlayerPrefs.SetInt("Coins",newAmountOfCoins);
             MenuPanel.Instance.UpdateInfo();
             coinText.text = PlayerPrefs.GetInt("Coins").ToString("#,#");
+            if (AudioManager.HasInstance)
+            {
+                AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+            }
             StartCoroutine(Notify("Buy Successful", 3f));
             return true;
+        }
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
         }
         StartCoroutine(Notify("Not Enought Coin", 3f));
         return false;

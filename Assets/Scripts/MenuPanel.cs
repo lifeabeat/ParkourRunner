@@ -31,6 +31,11 @@ public class MenuPanel : BaseManager<MenuPanel>
     }
     public void OnSettingButtonClick()
     {
+        
+        if(AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }    
         if (UIManager.HasInstance)
         {
             UIManager.Instance.ActiveMenuPanel(false);
@@ -41,7 +46,11 @@ public class MenuPanel : BaseManager<MenuPanel>
 
     public void OnShopButtonClick()
     {
-        if(UIManager.HasInstance)
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
+        if (UIManager.HasInstance)
         {
             UIManager.Instance.ActiveMenuPanel(false);
             UIManager.Instance.ActiveShopPanel(true);
@@ -50,7 +59,11 @@ public class MenuPanel : BaseManager<MenuPanel>
     }    
     public void OnMusiceButtonClick()
     {
-        if(UIManager.HasInstance)
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
+        if (UIManager.HasInstance)
         {
         }    
     }    
