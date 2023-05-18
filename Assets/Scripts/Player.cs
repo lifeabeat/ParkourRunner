@@ -17,6 +17,10 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool extraLife;
     private bool isDead;
 
+    [Header("VFX")]
+    [SerializeField] private ParticleSystem dustFx;
+
+
     [Header("KnockBack Info")]
     [SerializeField] private Vector2 knockbackDir;
     private bool isKnocked;
@@ -32,11 +36,12 @@ public class Player : MonoBehaviour
     private float speedMilestones;
 
     [Header("Move Info")]
+    [SerializeField] private float speedToSurvice = 18;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
     [SerializeField] private float doubleJumpForce;
 
-
+    private bool readyToLand;
     private bool canDoubleJump;
 
     [Header("Slide Info")]
@@ -102,9 +107,8 @@ public class Player : MonoBehaviour
 
         slideTimerCounter -= Time.deltaTime;
         slideCoolDownCounter -= Time.deltaTime;
-        extraLife = moveSpeed >= maxSpeed;
-
-
+        extraLife = moveSpeed >= speedToSurvice;
+        
         //Test Knockback
         /*if (Input.GetKeyDown(KeyCode.K))
         {
@@ -134,13 +138,29 @@ public class Player : MonoBehaviour
             Movement();
         }
 
-        CheckInput();
-        CheckForSlide();
-        CheckForLedge();
-
         if (isGrounded)
         {
             canDoubleJump = true;
+        }
+
+        CheckInput();
+        CheckForSlide();
+        CheckForLedge();
+        CheckForLanded();
+
+        
+    }
+
+    private void CheckForLanded()
+    {
+        if (theRb.velocity.y < -5 && !isGrounded)
+        {
+            readyToLand = true;
+        }
+        if (readyToLand && isGrounded)
+        {
+            dustFx.Play();
+            readyToLand = false;
         }
     }
 
@@ -173,7 +193,7 @@ public class Player : MonoBehaviour
         isDead = true;
         theRb.velocity = knockbackDir;
         anim.SetBool("IsDead", true);
-        Time.timeScale = 0.6f;
+        Time.timeScale = 0.8f;
         yield return new WaitForSeconds(.5f);
         theRb.velocity = new Vector2(0, 0);
         yield return new WaitForSeconds(.5f);
@@ -301,6 +321,10 @@ public class Player : MonoBehaviour
 
     private void SpeedReset()
     {
+        if (isSliding)
+        {
+            return;
+        }
         moveSpeed = defaultSpeed;
         milestoneIncreaser = defaultMilestoneIncrease;
 
@@ -326,8 +350,13 @@ public class Player : MonoBehaviour
 
     private void SlideButton()
     {
+        if (isDead)
+        {
+            return; 
+        }
         if (theRb.velocity.x != 0 && slideCoolDownCounter < 0)
         {
+            dustFx.Play();
             isSliding = true;
             slideTimerCounter = slideTime;
             slideCoolDownCounter = slideCoolDownTime;
@@ -337,10 +366,13 @@ public class Player : MonoBehaviour
     }
     private void JumpButton()
     {
-        if (isSliding)
+        if (isSliding || isDead)
         {
             return;
         }
+
+        RollFinished();
+
         if (isGrounded)
         {
             if (AudioManager.HasInstance)
@@ -348,6 +380,7 @@ public class Player : MonoBehaviour
                 AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_JUMP_01);
             }
             theRb.velocity = new Vector2(theRb.velocity.x, jumpForce);
+            dustFx.Play();
         }
         else if (canDoubleJump)
         {
@@ -357,6 +390,7 @@ public class Player : MonoBehaviour
                 AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_JUMP_02);
             }
             theRb.velocity = new Vector2(theRb.velocity.x, doubleJumpForce);
+            dustFx.Play();
         }
     }
     private void CheckInput()
@@ -387,7 +421,7 @@ public class Player : MonoBehaviour
         anim.SetBool("canClimb", canClimb);
         anim.SetBool("IsKnocked", isKnocked);
 
-        if (theRb.velocity.y < 20)
+        if (theRb.velocity.y < 10)
         {
             anim.SetBool("canRoll", true);
         }

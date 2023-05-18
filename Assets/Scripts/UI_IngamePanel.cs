@@ -17,10 +17,10 @@ public class UI_IngamePanel : MonoBehaviour
     [SerializeField] private Image heartEmpty;
     [SerializeField] private Image heartFull;
 
-    private void Start()
+    private void Update()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        InvokeRepeating("UpdateDistance", 0, .15f);
+        UpdateDistance();
     }
     // Update Distance   
     private void UpdateDistance()

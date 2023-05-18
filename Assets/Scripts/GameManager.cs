@@ -15,9 +15,6 @@ public class GameManager : BaseManager<GameManager>
     {
         coins = v;
     }
-
-    //Original Color
-    public Color OrginalColor = new Color(255, 255, 255, 1);
     //Score
     public float score;
 
@@ -29,7 +26,7 @@ public class GameManager : BaseManager<GameManager>
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player = GetComponent<Player>();
         theSR = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>();
         //Using PlayerRef to Update Player Skin every first time to start the game
         GetSavedColor(theSR);
@@ -84,6 +81,7 @@ public class GameManager : BaseManager<GameManager>
         isPlaying = true;
         Time.timeScale = 1f;
         coins = 0;
+        
         if (UIManager.HasInstance && MenuPanel.HasInstance)
         {
             UIManager.Instance.ActiveMenuPanel(true);
@@ -94,8 +92,8 @@ public class GameManager : BaseManager<GameManager>
             /*UIManager.Instance.UIIngamePanel.GetComponent<GamePanel>.NumberOfCoins.SetText("0");*/
             UIManager.Instance.UIIngamePanel.NumberOfCoins.SetText("0");
             SceneManager.LoadScene(0);
-
         }
+    
     }
 
 
@@ -131,21 +129,18 @@ public class GameManager : BaseManager<GameManager>
 
     private void Update()
     {
-
-        if (player != null)
-        {
-            if (player.transform.position.x >= distance)
-            {
-                distance = player.transform.position.x;
-            }
-        }
         if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            distance = player.transform.position.x;
         }
         if (theSR == null)
         {
             theSR = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>();
+        }
+        if (player.transform.position.x >= distance)
+        {
+            distance = player.transform.position.x;
         }
     }
 
@@ -155,6 +150,7 @@ public class GameManager : BaseManager<GameManager>
         PlayerPrefs.SetInt("Coins", savedCoins + coins);
 
         score = distance * coins;
+        
         PlayerPrefs.SetFloat("LastScore", score);
 
         if (PlayerPrefs.GetFloat("HighScore") < score)

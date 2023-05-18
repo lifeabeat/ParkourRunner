@@ -8,7 +8,13 @@ public class EndGamePanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TextMeshProUGUI distance;
     [SerializeField] private TextMeshProUGUI score;
-    private void Start()
+    private void Update()
+    {
+        UpdateTextInfo();
+
+    }
+
+    private void UpdateTextInfo()
     {
         if (GameManager.Instance.distance < 0)
         {
@@ -18,14 +24,14 @@ public class EndGamePanel : MonoBehaviour
         {
             return;
         }
-        distance.text = "Distance: " +GameManager.Instance.distance.ToString("#,#") +" m";
-        score.text = "Score: " +GameManager.Instance.score.ToString("#,#");
-        coinText.text = "Coins: " +GameManager.Instance.Coins.ToString("#,#");
-        
+        distance.text = "Distance: " + GameManager.Instance.distance.ToString("#,#") + " m";
+        score.text = "Score: " + GameManager.Instance.score.ToString("#,#");
+        coinText.text = "Coins: " + GameManager.Instance.Coins.ToString("#,#");
     }
-    
+
     public void OnMenuButtonClick()
     {
+        
         if (AudioManager.HasInstance)
         {
             AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
