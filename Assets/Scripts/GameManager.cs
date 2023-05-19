@@ -17,13 +17,20 @@ public class GameManager : BaseManager<GameManager>
     }
     //Score
     public float score;
+    [Header("Sky Box")]
+    [SerializeField] private Material[] SkyBoxMat;
+
 
     [Header("Distance Info")]
     public float distance;
 
-    [Header("Color Info")]
+    [Header("Color Purchased Info")]
     public Color platformColor;
 
+    protected override void Awake()
+    {
+        SetupSkyBox(PlayerPrefs.GetInt("SkyBoxSetting"));
+    }
     private void Start()
     {
         player = GetComponent<Player>();
@@ -96,6 +103,19 @@ public class GameManager : BaseManager<GameManager>
     
     }
 
+    public void SetupSkyBox(int i)
+    {
+        if (i <= 1)
+        {
+            RenderSettings.skybox = SkyBoxMat[i];
+        }
+        else
+        {
+            RenderSettings.skybox = SkyBoxMat[Random.Range(0, SkyBoxMat.Length)];
+        }
+
+        PlayerPrefs.SetInt("SkyBoxSetting", i);
+    }
 
     public void SaveColor(float r, float g, float b)
     {

@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
 
     [Header("VFX")]
     [SerializeField] private ParticleSystem dustFx;
+    [SerializeField] private ParticleSystem bloodFx;
 
 
     [Header("KnockBack Info")]
@@ -168,6 +169,7 @@ public class Player : MonoBehaviour
     {
         if (extraLife)
         {
+            
             if (AudioManager.HasInstance)
             {
                 AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_FALLINGSPIKE_LAND);
@@ -181,6 +183,7 @@ public class Player : MonoBehaviour
             {
                 AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_FALLINGSPIKE_LAND);
             }
+            bloodFx.Play();
             StartCoroutine(Die());
         }
 

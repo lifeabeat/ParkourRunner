@@ -71,4 +71,13 @@ public class SettingPanel : MonoBehaviour
         UIManager.Instance.ActiveMenuPanel(true);
         UIManager.Instance.ActiveSettingPanel(false);
     }    
+
+    public void SwitchSkyBox(int index)
+    {
+        if (AudioManager.HasInstance)
+        {
+            AudioManager.Instance.PlaySE(AUDIO.BGM_SFX_UI_CLICK);
+        }
+        GameManager.Instance.SetupSkyBox(index);
+    }
 }
