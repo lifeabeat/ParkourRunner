@@ -9,6 +9,11 @@ public class MenuPanel : BaseManager<MenuPanel>
     [SerializeField] private TextMeshProUGUI highscoreText;
     [SerializeField] private TextMeshProUGUI coinText;
 
+    [SerializeField]
+    private GameObject howToPlayImage;
+    [SerializeField]
+    private GameObject howToPlayBtn;
+
     public void UpdateInfo()
     {
         lastscoreText.text = "Lastest Score: " + PlayerPrefs.GetFloat("LastScore").ToString();
@@ -66,5 +71,17 @@ public class MenuPanel : BaseManager<MenuPanel>
         if (UIManager.HasInstance)
         {
         }    
-    }    
+    }
+
+    public void OnHowToPlayButtonClick()
+    {
+        howToPlayImage.SetActive(true);
+        howToPlayBtn.SetActive(false);
+    }
+
+    public void OnHowToPlayButtonImgClick()
+    {
+        howToPlayImage.SetActive(false);
+        howToPlayBtn.SetActive(true);
+    }
 }

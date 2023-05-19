@@ -16,6 +16,7 @@ public class UI_IngamePanel : MonoBehaviour
 
     [SerializeField] private Image heartEmpty;
     [SerializeField] private Image heartFull;
+    [SerializeField] private Image slideIcon;
 
     private void Update()
     {
@@ -26,6 +27,7 @@ public class UI_IngamePanel : MonoBehaviour
     private void UpdateDistance()
     {
         ExtraLife();
+        slideIcon.enabled = player.slideCoolDownCounter < 0;
         mDistance = GameManager.Instance.distance;
 
         if (mDistance > 0 )

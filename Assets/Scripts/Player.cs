@@ -49,9 +49,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float slideSpeed;
     [SerializeField] private float slideTime;
     [SerializeField] private float slideCoolDownTime;
+ 
     private bool isSliding;
     private float slideTimerCounter;
-    private float slideCoolDownCounter;
+    [HideInInspector] public float slideCoolDownCounter;
 
     [Header("Collision Info")]
 
@@ -351,7 +352,7 @@ public class Player : MonoBehaviour
     }
 
 
-    private void SlideButton()
+    public void SlideButton()
     {
         if (isDead)
         {
@@ -367,7 +368,7 @@ public class Player : MonoBehaviour
 
 
     }
-    private void JumpButton()
+    public void JumpButton()
     {
         if (isSliding || isDead)
         {
