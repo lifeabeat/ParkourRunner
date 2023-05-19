@@ -39,7 +39,10 @@ public class ShopPanel : MonoBehaviour
     [SerializeField] private SpriteRenderer playerDisplaysr;
 
 
-
+    private void Update()
+    {
+        coinText.text = PlayerPrefs.GetInt("Coins").ToString("#,#");
+    }
     public void OnExitButtonClick()
     {
         if (AudioManager.HasInstance)
@@ -51,7 +54,6 @@ public class ShopPanel : MonoBehaviour
     }
     private void Start()
     {
-        coinText.text = PlayerPrefs.GetInt("Coins").ToString("#,#");
         for (int i = 0; i <platformColors.Length; i++)
         {
             Color color = platformColors[i].Sellcolor;
